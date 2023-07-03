@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Canvas Game</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+
+    <style>
+        .a_tbdr {
+            border: 1px dashed red;
+        }
+    </style>
+</head>
+
+<body>
+
+    <canvas id="myCanvas" class="a_tbdr mx-auto d-block"></canvas>
+
+    <script>
+        var canvas = document.getElementById("myCanvas");
+        canvas.height = 934;
+        canvas.width = 1667;
+
+
+        var ctx = canvas.getContext("2d");
+        var image = new Image();
+        image.src = "./img/3.jpg"; // Replace with the actual path to your image
+
+        image.onload = function () {
+
+            ctx.drawImage(image, 0, 0);
+        };
+
+
+        var buttonX = 600; // X position of the button
+        var buttonY = 750; // Y position of the button
+        var buttonWidth = 440; // Width of the button
+        var buttonHeight = 130; // Height of the button
+
+        image.onload = function () {
+            ctx.drawImage(image, 0, 0);
+            drawButton();
+
+
+            // Array of balloon data (position, text, and color)
+            var balloonData = [
+                { x: 115, y: 100, text: "T", color: "#DF0613" }, // Red
+                { x: 245, y: 100, text: "Y", color: "#2CAE25" }, // Green
+                { x: 375, y: 100, text: "P", color: "#9C47ED" }, // Blue
+                { x: 505, y: 100, text: "I", color: "#FFDC00" }, // Blue
+                { x: 635, y: 100, text: "N", color: "#FF8A2D" }, // Blue
+                { x: 765, y: 100, text: "G", color: "#ABD0E9" }, // Blue
+                { x: 55, y: 290, text: "B", color: "#ABD0E9" }, // Blue
+                { x: 185, y: 290, text: "A", color: "#FF8A2D" }, // Blue
+                { x: 315, y: 290, text: "L", color: "#FFDC00" }, // Blue
+                { x: 445, y: 290, text: "L", color: "#9C47ED" }, // Blue
+                { x: 575, y: 290, text: "O", color: "#2CAE25" }, // Blue
+                { x: 705, y: 290, text: "O", color: "#DF0613" }, // Blue
+                { x: 835, y: 290, text: "N", color: "#DD4680" } // Blue
+                // Add more balloons with different colors as needed...
+            ];
+
+            // Draw the balloons
+            for (var i = 0; i < balloonData.length; i++) {
+                var balloon = balloonData[i];
+
+                // Balloon body
+                var radiusX = 50;
+                var radiusY = 60;
+                ctx.beginPath();
+                ctx.ellipse(balloon.x + radiusX, balloon.y + radiusY, radiusX, radiusY, 0, 0, Math.PI * 2);
+                ctx.fillStyle = balloon.color;
+                ctx.fill();
+                ctx.closePath();
+
+                // Balloon string
+                ctx.beginPath();
+                ctx.moveTo(balloon.x + radiusX, balloon.y + radiusY * 2);
+                ctx.lineTo(balloon.x + radiusX, balloon.y + radiusY * 2 + 50);
+                ctx.strokeStyle = "#000000"; // Black color
+                ctx.lineWidth = 2;
+                ctx.stroke();
+                ctx.closePath();
+
+                // Balloon knot
+                ctx.beginPath();
+                ctx.arc(balloon.x + radiusX, balloon.y + radiusY * 2 + 10, 10, 0, Math.PI * 2);
+                ctx.fillStyle = "#000000"; // Black color
+                ctx.fill();
+                ctx.closePath();
+
+                // Text inside balloon
+                ctx.font = "65px Comic Sans MS";
+                ctx.fillStyle = "#ffffff"; // White color
+                ctx.strokeStyle = "#000000"; // Black color
+                ctx.lineWidth = 5;
+
+                var textWidth = ctx.measureText(balloon.text).width;
+                var textX = balloon.x + radiusX - textWidth / 2;
+                var textY = balloon.y + radiusY + 14; // Adjust the vertical position of the text as needed
+
+                ctx.strokeText(balloon.text, textX, textY);
+                ctx.fillText(balloon.text, textX, textY);
+            }
+        };
+
+
+
+
+
+        function drawButton() {
+
+
+
+            ctx.fillStyle = "rgba(240, 240, 240, 0.0)"; // Button background color
+            ctx.fillRect(buttonX, buttonY, buttonWidth, buttonHeight);
+
+            ctx.font = "80px Comic Sans MS";
+            ctx.strokeStyle = "#36ADE8";
+            ctx.lineWidth = 10;
+            ctx.strokeText("StartGame", buttonX + 10, buttonY + buttonHeight / 2 + 6);
+            ctx.fillStyle = "white";
+            ctx.fillText("StartGame", buttonX + 10, buttonY + buttonHeight / 2 + 6);
+        }
+
+        canvas.addEventListener("click", function (event) {
+            var rect = canvas.getBoundingClientRect();
+            var mouseX = event.clientX - rect.left;
+            var mouseY = event.clientY - rect.top;
+
+            if (
+                mouseX > buttonX &&
+                mouseX < buttonX + buttonWidth &&
+                mouseY > buttonY &&
+                mouseY < buttonY + buttonHeight
+            ) {
+                alert("Button clicked!");
+            }
+        });
+
+
+
+    </script>
+
+
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
+        crossorigin="anonymous"></script>
+</body>
+
+</html>
