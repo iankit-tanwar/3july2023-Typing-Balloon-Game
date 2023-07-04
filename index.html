@@ -29,6 +29,7 @@
 
         var ctx = canvas.getContext("2d");
         
+
         // Set the initial progress values
         let progress = 0;
         const totalProgress = 100;
@@ -68,7 +69,7 @@
                 image.src = "./img/3.jpg";
                 //   ctx.fillText("Main Screen", canvas.width / 2 - 80, canvas.height / 2);
 
-                
+
             }
         }
 
@@ -94,9 +95,7 @@
         // Call the startGame function to begin the game
         startGame();
 
-        
 
-        
 
 
         var image = new Image();
@@ -105,20 +104,21 @@
         image.onload = function () {
 
             ctx.drawImage(image, 0, 0);
-            
-            
+
+
+
         };
-        
 
         var buttonX = 600; // X position of the button
         var buttonY = 750; // Y position of the button
         var buttonWidth = 440; // Width of the button
         var buttonHeight = 130; // Height of the button
 
+       
         image.onload = function () {
+
             ctx.drawImage(image, 0, 0);
             drawButton();
-
 
             // Array of balloon data (position, text, and color)
             var balloonData = [
@@ -183,11 +183,13 @@
 
             
 
-          
+
+
+
         };
-        
-        
-            function drawButton() {
+
+
+        function drawButton() {
 
 
 
@@ -202,7 +204,7 @@
             ctx.fillText("StartGame", buttonX + 10, buttonY + buttonHeight / 2 + 6);
         }
 
-       
+
 
         canvas.addEventListener("click", function (event) {
             var rect = canvas.getBoundingClientRect();
@@ -319,7 +321,7 @@
         });
 
 
-        
+
 
 
 
