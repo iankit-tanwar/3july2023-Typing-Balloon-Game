@@ -28,20 +28,21 @@
 
 
         var ctx = canvas.getContext("2d");
+        
         // Set the initial progress values
         let progress = 0;
         const totalProgress = 100;
 
         // Function to update the progress bar and main screen
-       
+
         function updateProgressBar() {
             // Clear the canvas
 
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             ctx.font = "80px Comic Sans MS";
             ctx.fillText("WELCOME TO GAME", 400, 500);
-          
-             // Draw the progress bar background
+
+            // Draw the progress bar background
             ctx.fillStyle = "#e0e0e0";
             ctx.fillRect(0, canvas.height - 20, canvas.width, 20);
 
@@ -66,6 +67,8 @@
                 //   ctx.font = "30px Arial";
                 image.src = "./img/3.jpg";
                 //   ctx.fillText("Main Screen", canvas.width / 2 - 80, canvas.height / 2);
+
+                
             }
         }
 
@@ -91,6 +94,10 @@
         // Call the startGame function to begin the game
         startGame();
 
+        
+
+        
+
 
         var image = new Image();
         image.src = "./img/3.jpg"; // Replace with the actual path to your image
@@ -98,8 +105,10 @@
         image.onload = function () {
 
             ctx.drawImage(image, 0, 0);
+            
+            
         };
-
+        
 
         var buttonX = 600; // X position of the button
         var buttonY = 750; // Y position of the button
@@ -172,14 +181,13 @@
                 ctx.fillText(balloon.text, textX, textY);
             }
 
+            
 
+          
         };
-
-
-
-
-
-        function drawButton() {
+        
+        
+            function drawButton() {
 
 
 
@@ -194,6 +202,8 @@
             ctx.fillText("StartGame", buttonX + 10, buttonY + buttonHeight / 2 + 6);
         }
 
+       
+
         canvas.addEventListener("click", function (event) {
             var rect = canvas.getBoundingClientRect();
             var mouseX = event.clientX - rect.left;
@@ -205,9 +215,111 @@
                 mouseY > buttonY &&
                 mouseY < buttonY + buttonHeight
             ) {
+
                 alert("Button clicked!");
+
+                //  ctx.drawImage(image, 0, 0);
+                // Define the balloon properties
+                const balloons = [];
+                const balloonRadius = 50;
+                const balloonSpeed = 2;
+                const balloonColor = 'red';
+
+                // Load the background image
+                const backgroundImage = new Image();
+                backgroundImage.src = './img/3.jpg';
+                backgroundImage.onload = function () {
+                    // Start the game loop after the image has loaded
+                    gameLoop();
+                };
+
+                // Set up an event listener for keydown events
+                document.addEventListener('keydown', handleKeyDown);
+
+                // Define the keydown event handler
+                function handleKeyDown(event) {
+                    // Check if the key matches the balloon's corresponding letter
+                    const key = event.key.toLowerCase();
+                    const index = balloons.findIndex(balloon => !balloon.isBlasted && balloon.letter === key);
+                    if (index !== -1) {
+                        burstBalloon(index);
+                    }
+                }
+
+                // Define a function to create a new balloon
+                function createBalloon() {
+                    const balloon = {
+                        x: Math.random() * (canvas.width - 2 * balloonRadius) + balloonRadius,
+                        y: canvas.height,
+                        radius: balloonRadius,
+                        color: balloonColor,
+                        letter: getRandomLetter(),
+                        isBlasted: false
+                    };
+                    balloons.push(balloon);
+                }
+
+                // Define a function to generate a random letter
+                function getRandomLetter() {
+                    const alphabet = 'abcdefghijklmnopqrstuvwxyz';
+                    return alphabet[Math.floor(Math.random() * alphabet.length)];
+                }
+
+                // Define a function to burst a balloon
+                function burstBalloon(index) {
+                    balloons[index].isBlasted = true;
+                }
+
+                // Define the game loop function
+                function gameLoop() {
+                    // Render the background image
+                    ctx.drawImage(backgroundImage, 0, 0, canvas.width, canvas.height);
+
+                    // Create a new balloon randomly
+                    if (Math.random() < 0.01) {
+                        createBalloon();
+                    }
+
+                    // Update and render all balloons
+                    for (let i = 0; i < balloons.length; i++) {
+                        const balloon = balloons[i];
+
+                        // Move the balloon upwards
+                        balloon.y -= balloonSpeed;
+
+                        // Check if the balloon is out of the canvas or blasted
+                        if (balloon.y + balloon.radius < 0 || balloon.isBlasted) {
+                            balloons.splice(i, 1); // Remove the balloon from the array
+                            i--; // Adjust the index since the array length has decreased
+                            continue;
+                        }
+
+                        // Render the balloon
+                        ctx.fillStyle = balloon.color;
+                        ctx.beginPath();
+                        ctx.arc(balloon.x, balloon.y, balloon.radius, 0, 2 * Math.PI);
+                        ctx.fill();
+
+                        // Render the balloon's letter inside it
+                        ctx.font = "65px Comic Sans MS";
+                        ctx.fillStyle = "#ffffff"; // White color
+                        ctx.lineWidth = 15;
+                        ctx.strokeStyle = "#000000"; // Black color
+                        ctx.textAlign = 'center';
+                        ctx.textBaseline = 'middle';
+                        ctx.fillText(balloon.letter.toUpperCase(), balloon.x, balloon.y);
+                    }
+
+                    // Call the game loop on the next animation frame
+                    requestAnimationFrame(gameLoop);
+
+
+                }
             }
         });
+
+
+        
 
 
 
