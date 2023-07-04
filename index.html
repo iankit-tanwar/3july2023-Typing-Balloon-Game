@@ -11,6 +11,7 @@
     <style>
         .a_tbdr {
             border: 1px dashed red;
+            cursor: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAoCAYAAADt5povAAAAAXNSR0IArs4c6QAABHhJREFUWEdjZMAPWNhYWNpdzXVTQcp2n7w869efP1UMDAx/COjDKc1IQGPlht6yNn97E7CyjQdPMwQUd4MsbKeJhYbqCmfPLe0yQjbcILLs7MXbDyAuIAPg9aGNvtb1w3MbNJDNtU2pv37kwnUtMuwCaxm1cFAFKTcDAwMTAwPDZ1Lik+Q4tEmuuXPx5sP9AU5miazMTEzrD5xe9+Hzt0QGBoYvDAwMfAwMDGwMDAxvcDmCZAtNYisYWrMiGNwtDcBmnrtxn8EquWYGMyPT/1AX81QeTk7mdQdO7nn++kMUNotJtjC4rJdhbVcxigeskmoYSmP9GAIdzcDidx6/YDCJrVz+8ctXkKUogGQLY2snMyxuzkUxJLS8j2FVRxEDI5Jp/kXd7zcdOl1gpKlYIcjDw3/owo21v3//LqeKhdgcEVza819DUZqhJSsS7I6jF28yuGW3zKSZhWEV/QwLG7IZODlAaQgCAkp6viBbKMrAwMDOwMDwjIGB4R9IAbaiDZtvSBEDWSghIyq4PMDJ3IGTnY3h4q0Hb/edujLrz79/LTb6WmfRy1JSDEePa5BeRhFBvg1nFnX4y0uKwL0OCu/I2kkn5EQEJY/Ma5FHTiEUWxjqbPFjVWcRKChRwKkrdxhyu+cxnFzYhiJOsYU2huqPDs9ulsVWMsTUTmZYgpYFkpunM8ytzURRTqwYOEgZGBhSalKCZ1cmBDBwcaB6FJtv/v79x8DMDCpCEYBYMZiFIJ1usuLCjUua8yzsjDThJmGzEFtIECuGbCFID6u0mND+66v7rXm5OcFmYAtSYg3Hpg7dQpCa8PU9pSsCHEwZ/vz9y5DUOJ1hUVMOJXZgJDj0ksZ5fn3WngRfB4YDZ68yXLnzmCEn3IOmFjrMqc3Yn+zvxJDTOZehLjWEQUyIn6YW6nXmRl8si/dniKqZxLCsJY9qloEMwhaH3PG+jh8W1GeynLh8i8FCV42qFkZUT/yNUVtoykmevLp2ohly3UYtW12ymh5iq57Kjs5r6bTSo67vfv76zSDlnroOm4UiIc6WD1Z3FoJaZVQD0H5JItYKmImBoX7n1NpqZ3Pdv1ht/P+fUCcIpg2uziWr+cO+01cUcWlkV5AWO3p0bqu0pAgfpqX/iYlhhKMWbTnEldA4tZKBgWE6PpfKG6gr7N0xueqnmKAAjv4gAZ8yMjJ++PSFSSu46NWL9x+cQS0JQkGjoiIruWZtV+EPXRWFbzgjlBF3p6hmyjK5tgUbQA3lQyD9hCwEqRGSlxTdeXFZ52M+Xm7scQo2CXsw64UWK1659xjUn/xPrIUgde4lMX41nQWxVxgYCYTKP0Qwf/r6nUXEOZnx799/SRipiED6ZzHTVT11fEHzNrC6f8z4QwbqqKPnrwvapTa8YGBgaCTVQgYtRdkjV1f1rEVxGI5ghKnZdOCMhH9J13vkMQFi4hCsX1VWYv+tdZPnY4QEniBetuuYdHTVRFDcwQchiLZQXIh/2Ys9c/sY/vwhWk/P8m0ypf2LFBkYGPpgDgUAS8flzmrpvVgAAAAASUVORK5CYII=), default;
         }
     </style>
 </head>
@@ -20,12 +21,77 @@
     <canvas id="myCanvas" class="a_tbdr mx-auto d-block"></canvas>
 
     <script>
+
         var canvas = document.getElementById("myCanvas");
         canvas.height = 934;
         canvas.width = 1667;
 
 
         var ctx = canvas.getContext("2d");
+        // Set the initial progress values
+        let progress = 0;
+        const totalProgress = 100;
+
+        // Function to update the progress bar and main screen
+       
+        function updateProgressBar() {
+            // Clear the canvas
+
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.font = "80px Comic Sans MS";
+            ctx.fillText("WELCOME TO GAME", 400, 500);
+          
+             // Draw the progress bar background
+            ctx.fillStyle = "#e0e0e0";
+            ctx.fillRect(0, canvas.height - 20, canvas.width, 20);
+
+            // Calculate the progress bar width
+            const progressBarWidth = (progress / totalProgress) * canvas.width;
+
+            // Draw the progress bar
+            ctx.fillStyle = "#42b983";
+            ctx.fillRect(0, canvas.height - 20, progressBarWidth, 20);
+
+            // Check if the progress is complete
+            if (progress >= totalProgress) {
+                // Clear the canvas
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+                // Draw the main screen content
+                ctx.fillStyle = "#f0f0f0";
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+                // Draw the text on the main screen
+                //  ctx.fillStyle = "#000000";
+                //   ctx.font = "30px Arial";
+                image.src = "./img/3.jpg";
+                //   ctx.fillText("Main Screen", canvas.width / 2 - 80, canvas.height / 2);
+            }
+        }
+
+        // Start the game and update the progress bar
+        function startGame() {
+            // Simulate the progress increment
+            const increment = 5;
+            const interval = setInterval(() => {
+                // Increase the progress
+                progress += increment;
+
+                // Update the progress bar and main screen
+                updateProgressBar();
+
+                // Check if the progress is complete
+                if (progress >= totalProgress) {
+                    // Game is complete, stop the interval
+                    clearInterval(interval);
+                }
+            }, 50); // Adjust the interval duration as needed
+        }
+
+        // Call the startGame function to begin the game
+        startGame();
+
+
         var image = new Image();
         image.src = "./img/3.jpg"; // Replace with the actual path to your image
 
@@ -105,6 +171,8 @@
                 ctx.strokeText(balloon.text, textX, textY);
                 ctx.fillText(balloon.text, textX, textY);
             }
+
+
         };
 
 
