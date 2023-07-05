@@ -28,7 +28,7 @@
 
 
         var ctx = canvas.getContext("2d");
-        
+
 
         // Set the initial progress values
         let progress = 0;
@@ -114,8 +114,32 @@
         var buttonWidth = 440; // Width of the button
         var buttonHeight = 130; // Height of the button
 
-       
+
         image.onload = function () {
+
+            // Create an AudioContext
+            var audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+            // Load the sound file
+            var soundURL = './sound/2.mp3';
+            var request = new XMLHttpRequest();
+            request.open('GET', soundURL, true);
+            request.responseType = 'arraybuffer';
+
+            request.onload = function () {
+                // Decode the audio data
+                audioCtx.decodeAudioData(request.response, function (buffer) {
+                    // Create a source node
+                    var source = audioCtx.createBufferSource();
+                    source.buffer = buffer;
+                    source.connect(audioCtx.destination);
+
+                    // Play the sound
+                    source.start(0);
+                });
+            };
+
+            request.send();
 
             ctx.drawImage(image, 0, 0);
             drawButton();
@@ -181,7 +205,7 @@
                 ctx.fillText(balloon.text, textX, textY);
             }
 
-            
+
 
 
 
