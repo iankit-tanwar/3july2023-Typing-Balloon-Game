@@ -33,7 +33,7 @@
 
 
         var ctx = canvas.getContext("2d");
-      
+
 
         // Set the initial progress values
         let progress = 0;
@@ -253,13 +253,13 @@
 
 
                 //  ctx.drawImage(image, 0, 0);
-                // Define the balloon properties
                 const balloons = [];
                 const balloonRadius = 50;
                 const balloonSpeed = 2;
                 const balloonColor = 'red';
                 const blastParticles = [];
                 const blastDuration = 1000; // Blast animation duration in milliseconds
+                let score = 0;
 
                 // Load the background image
                 const backgroundImage = new Image();
@@ -279,6 +279,7 @@
                     const index = balloons.findIndex(balloon => !balloon.isBlasted && balloon.letter === key);
                     if (index !== -1) {
                         burstBalloon(index);
+                        updateScore(10); // Increase the score by 10 for each balloon burst
                     }
                 }
 
@@ -325,6 +326,11 @@
                         };
                         blastParticles.push(particle);
                     }
+                }
+
+                // Define a function to update the score
+                function updateScore(points) {
+                    score += points;
                 }
 
                 // Define the game loop function
@@ -392,9 +398,16 @@
                         particle.life--;
                     }
 
+                    // Render the score label
+                    ctx.font = '24px Arial';
+                    ctx.fillStyle = '#ffffff';
+                    ctx.fillText(`Score: ${score}`, 100, 50);
+
                     // Call the game loop on the next animation frame
                     requestAnimationFrame(gameLoop);
                 }
+
+
 
 
 
