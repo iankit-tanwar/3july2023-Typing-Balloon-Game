@@ -229,7 +229,7 @@
                 var audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 
                 // Load the sound file
-                var soundURL = './sound/2.mp3';
+                var soundURL = './sound/32.mp3';
                 var request = new XMLHttpRequest();
                 request.open('GET', soundURL, true);
                 request.responseType = 'arraybuffer';
@@ -256,10 +256,12 @@
                 const balloons = [];
                 const balloonRadius = 50;
                 const balloonSpeed = 2;
-                const balloonColor = 'red';
                 const blastParticles = [];
                 const blastDuration = 1000; // Blast animation duration in milliseconds
                 let score = 0;
+                let isPaused = false;
+                let animationFrameId = null;
+                let isSoundOn = true;
 
                 // Load the background image
                 const backgroundImage = new Image();
@@ -269,14 +271,39 @@
                     gameLoop();
                 };
 
-                // Set up an event listener for keydown events
-                document.addEventListener('keydown', handleKeyDown);
+                // Create start/pause button
+                const startPauseButton = document.createElement('button');
+                startPauseButton.textContent = 'Start';
+                startPauseButton.style.position = 'absolute';
+                startPauseButton.style.top = '32px';
+                startPauseButton.style.left = '330px';
+                startPauseButton.style.color = 'white';
+                startPauseButton.style.background = 'red';
+                canvas.parentNode.appendChild(startPauseButton);
+
+                // Create sound button
+                const soundButton = document.createElement('button');
+                soundButton.textContent = 'Sound Off';
+                soundButton.style.position = 'absolute';
+                soundButton.style.top = '32px';
+                soundButton.style.left = '410px';
+                soundButton.style.color = 'white';
+                soundButton.style.background = 'blue';
+                canvas.parentNode.appendChild(soundButton);
+
+                // Set up event listener for the start/pause button
+                startPauseButton.addEventListener('click', toggleGame);
+
+                // Set up event listener for the sound button
+                soundButton.addEventListener('click', toggleSound);
 
                 // Define the keydown event handler
                 function handleKeyDown(event) {
                     // Check if the key matches the balloon's corresponding letter
                     const key = event.key.toLowerCase();
-                    const index = balloons.findIndex(balloon => !balloon.isBlasted && balloon.letter === key);
+                    const index = balloons.findIndex(
+                        (balloon) => !balloon.isBlasted && balloon.letter === key
+                    );
                     if (index !== -1) {
                         burstBalloon(index);
                         updateScore(10); // Increase the score by 10 for each balloon burst
@@ -285,13 +312,14 @@
 
                 // Define a function to create a new balloon
                 function createBalloon() {
+                    const colors = ['red', 'blue', 'green', 'Coral', 'orange', 'purple'];
                     const balloon = {
                         x: Math.random() * (canvas.width - 2 * balloonRadius) + balloonRadius,
                         y: canvas.height,
                         radius: balloonRadius,
-                        color: balloonColor,
+                        color: colors[Math.floor(Math.random() * colors.length)],
                         letter: getRandomLetter(),
-                        isBlasted: false
+                        isBlasted: false,
                     };
                     balloons.push(balloon);
                 }
@@ -322,7 +350,7 @@
                             vx: Math.cos(angle) * speed,
                             vy: Math.sin(angle) * speed,
                             alpha: 1,
-                            life: blastDuration
+                            life: blastDuration,
                         };
                         blastParticles.push(particle);
                     }
@@ -331,6 +359,30 @@
                 // Define a function to update the score
                 function updateScore(points) {
                     score += points;
+                }
+
+                // Define the toggleGame function
+                function toggleGame() {
+                    isPaused = !isPaused;
+                    if (isPaused) {
+                        startPauseButton.textContent = 'Resume';
+                        cancelAnimationFrame(animationFrameId);
+                    } else {
+                        startPauseButton.textContent = 'Pause';
+                        gameLoop();
+                    }
+                }
+
+                // Define the toggleSound function
+                function toggleSound() {
+                    isSoundOn = !isSoundOn;
+                    if (isSoundOn) {
+                        soundButton.textContent = 'Sound Off';
+                        playBackgroundMusic();
+                    } else {
+                        soundButton.textContent = 'Sound On';
+                        pauseBackgroundMusic();
+                    }
                 }
 
                 // Define the game loop function
@@ -364,10 +416,10 @@
                         ctx.fill();
 
                         // Render the balloon's letter inside it
-                        ctx.font = "65px Comic Sans MS";
-                        ctx.fillStyle = "#ffffff"; // White color
+                        ctx.font = '65px Comic Sans MS';
+                        ctx.fillStyle = '#ffffff'; // White color
                         ctx.lineWidth = 15;
-                        ctx.strokeStyle = "#000000"; // Black color
+                        ctx.strokeStyle = '#000000'; // Black color
                         ctx.textAlign = 'center';
                         ctx.textBaseline = 'middle';
                         ctx.fillText(balloon.letter.toUpperCase(), balloon.x, balloon.y);
@@ -404,10 +456,33 @@
                     ctx.fillText(`Score: ${score}`, 100, 50);
 
                     // Call the game loop on the next animation frame
-                    requestAnimationFrame(gameLoop);
+                    animationFrameId = requestAnimationFrame(gameLoop);
                 }
 
+                // Remove the existing event listener for keydown events
+                document.removeEventListener('keydown', handleKeyDown);
 
+                // Add event listener for keydown events
+                document.addEventListener('keydown', handleKeyDown);
+
+                // Sound functionality
+                const backgroundMusic = new Audio('./sound/2.mp3');
+                backgroundMusic.loop = true;
+
+                function playBackgroundMusic() {
+                    if (isSoundOn && backgroundMusic.paused) {
+                        backgroundMusic.play();
+                    }
+                }
+
+                function pauseBackgroundMusic() {
+                    if (!isSoundOn && !backgroundMusic.paused) {
+                        backgroundMusic.pause();
+                    }
+                }
+
+                // Initial play of the background music
+                playBackgroundMusic();
 
 
 
