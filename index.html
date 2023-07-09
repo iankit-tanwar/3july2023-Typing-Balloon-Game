@@ -225,29 +225,6 @@
                 mouseY < buttonY + buttonHeight
             ) {
 
-                // Create an AudioContext
-                var audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-
-                // Load the sound file
-                var soundURL = './sound/32.mp3';
-                var request = new XMLHttpRequest();
-                request.open('GET', soundURL, true);
-                request.responseType = 'arraybuffer';
-
-                request.onload = function () {
-                    // Decode the audio data
-                    audioCtx.decodeAudioData(request.response, function (buffer) {
-                        // Create a source node
-                        var source = audioCtx.createBufferSource();
-                        source.buffer = buffer;
-                        source.connect(audioCtx.destination);
-
-                        // Play the sound
-                        source.start(0);
-                    });
-                };
-
-                request.send();
 
                 /// alert("Button clicked!");
 
@@ -278,7 +255,7 @@
                 startPauseButton.style.top = '32px';
                 startPauseButton.style.left = '330px';
                 startPauseButton.style.color = 'white';
-                startPauseButton.style.background = 'red';
+                startPauseButton.style.background = 'Coral';
                 canvas.parentNode.appendChild(startPauseButton);
 
                 // Create sound button
@@ -288,7 +265,7 @@
                 soundButton.style.top = '32px';
                 soundButton.style.left = '410px';
                 soundButton.style.color = 'white';
-                soundButton.style.background = 'blue';
+                soundButton.style.background = 'Maroon';
                 canvas.parentNode.appendChild(soundButton);
 
                 // Set up event listener for the start/pause button
@@ -312,7 +289,7 @@
 
                 // Define a function to create a new balloon
                 function createBalloon() {
-                    const colors = ['red', 'blue', 'green', 'Coral', 'orange', 'purple'];
+                    const colors = ['red', 'blue', 'green', 'Coral', 'orange', 'purple', 'Maroon', 'Violet', 'Lime', 'Indigo' ];
                     const balloon = {
                         x: Math.random() * (canvas.width - 2 * balloonRadius) + balloonRadius,
                         y: canvas.height,
