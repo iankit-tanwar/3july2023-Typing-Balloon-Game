@@ -384,13 +384,13 @@
                         startPauseButton.textContent = 'Resume';
                         cancelAnimationFrame(animationFrameId);
                         backgroundMusic.pause();
-                       
-                      
+
+
                     } else {
                         startPauseButton.textContent = 'Pause';
                         gameLoop();
                         backgroundMusic.play();
-                       
+
                     }
                 }
 
@@ -542,9 +542,10 @@
                 // Start the countdown timer
                 let countdownTime = 2 * 60; // 5 minutes in seconds
                 let remainingTime = countdownTime;
+                let isTimerRunning = true;
 
                 function startCountdown() {
-                    if (remainingTime > 0) {
+                    if (remainingTime > 0 && isTimerRunning) {
                         remainingTime--;
                         countdownTimer.textContent = formatTime(remainingTime);
                         setTimeout(startCountdown, 1000); // Start the next countdown after 1 second
@@ -555,7 +556,12 @@
                         cancelAnimationFrame(animationFrameId);
                         pauseBackgroundMusic();
                         // alert('Game Over!'); // Display a game over message
+                       
+                       
+                    }
+                    if(remainingTime==0){
                         gameOver();
+
                     }
                 }
 
@@ -568,6 +574,19 @@
 
                 // Start the countdown
                 startCountdown();
+
+
+                // Function to toggle the state of the timer
+                function toggleTimer() {
+                    isTimerRunning = !isTimerRunning;
+                    if (isTimerRunning) {
+                        startCountdown();
+                       
+                    }
+                }
+
+                // Set up event listener for the start/pause button to toggle the timer
+                startPauseButton.addEventListener('click', toggleTimer);
 
 
 
