@@ -229,6 +229,35 @@
 
 
                 //  ctx.drawImage(image, 0, 0);
+
+                // Create the game over GIF element
+                const gameOverGIF = document.createElement('img');
+                gameOverGIF.src = './gif/1.gif';
+                gameOverGIF.style.position = 'absolute';
+                gameOverGIF.style.top = '50%';
+                gameOverGIF.style.left = '50%';
+                gameOverGIF.style.transform = 'translate(-50%, -50%)';
+                gameOverGIF.style.display = 'none';
+                document.body.appendChild(gameOverGIF);
+
+                // Create the countdown timer element
+                const countdownTimer = document.createElement('div');
+                countdownTimer.textContent = '';
+                countdownTimer.style.position = 'absolute';
+                countdownTimer.style.top = '32px';
+                countdownTimer.style.right = '32px';
+                countdownTimer.style.color = 'white';
+                countdownTimer.style.fontFamily = 'Arial';
+                countdownTimer.style.fontSize = '24px';
+                document.body.appendChild(countdownTimer);
+
+                // Get the bounding rectangle of the canvas
+                const canvasRect = canvas.getBoundingClientRect();
+
+                // Adjust the position of the countdown timer
+                countdownTimer.style.top = `${canvasRect.top + 30}px`;
+                countdownTimer.style.right = `${canvasRect.right - 470}px`;
+
                 const balloons = [];
                 const balloonRadius = 50;
                 const balloonSpeed = 2;
@@ -255,7 +284,7 @@
                 startPauseButton.style.left = '330px';
                 startPauseButton.style.color = 'white';
                 startPauseButton.style.background = 'Coral';
-                canvas.parentNode.appendChild(startPauseButton);
+                document.body.appendChild(startPauseButton);
 
                 // Create sound button
                 const soundButton = document.createElement('button');
@@ -265,7 +294,7 @@
                 soundButton.style.left = '410px';
                 soundButton.style.color = 'white';
                 soundButton.style.background = 'Maroon';
-                canvas.parentNode.appendChild(soundButton);
+                document.body.appendChild(soundButton);
 
                 // Set up event listener for the start/pause button
                 startPauseButton.addEventListener('click', toggleGame);
@@ -288,7 +317,18 @@
 
                 // Define a function to create a new balloon
                 function createBalloon() {
-                    const colors = ['red', 'blue', 'green', 'Coral', 'orange', 'purple', 'Maroon', 'Violet', 'Lime', 'Indigo'];
+                    const colors = [
+                        'red',
+                        'blue',
+                        'green',
+                        'Coral',
+                        'orange',
+                        'purple',
+                        'Maroon',
+                        'Violet',
+                        'Lime',
+                        'Indigo',
+                    ];
                     const balloon = {
                         x: Math.random() * (canvas.width - 2 * balloonRadius) + balloonRadius,
                         y: canvas.height,
@@ -400,7 +440,6 @@
                         ctx.textBaseline = 'middle';
                         ctx.fillText(balloon.letter.toUpperCase(), balloon.x, balloon.y);
 
-
                         // Draw the balloon's tail
                         ctx.lineWidth = 2;
                         ctx.strokeStyle = '#000000'; // Black color
@@ -408,7 +447,7 @@
                         const tailLength = 50; // Length of the balloon's tail
                         const tailWidth = 2; // Width of the tail
 
-                        const tailX = balloon.x - (tailWidth / 2);
+                        const tailX = balloon.x - tailWidth / 2;
                         const tailY = balloon.y + balloon.radius - tailLength;
 
                         const knotRadius = 8; // Radius of the knot
@@ -425,10 +464,6 @@
                         ctx.lineTo(tailX, tailY + 50); // Adjust the length of the string as needed
 
                         ctx.stroke();
-
-
-
-
                     }
 
                     // Update and render blast particles
@@ -490,10 +525,61 @@
                 // Initial play of the background music
                 playBackgroundMusic();
 
+                // Function to handle game over
+                function gameOver() {
+                    isSoundOn = false;
+                    soundButton.textContent = 'Sound On';
+                    cancelAnimationFrame(animationFrameId);
+                    pauseBackgroundMusic();
+                    gameOverGIF.style.display = 'block';
+                }
+
+                // Start the countdown timer
+                let countdownTime = 5 * 60; // 5 minutes in seconds
+                let remainingTime = countdownTime;
+
+                function startCountdown() {
+                    if (remainingTime > 0) {
+                        remainingTime--;
+                        countdownTimer.textContent = formatTime(remainingTime);
+                        setTimeout(startCountdown, 1000); // Start the next countdown after 1 second
+                    } else {
+                        // Countdown complete, stop the game
+                        isSoundOn = false;
+                        soundButton.textContent = 'Sound On';
+                        cancelAnimationFrame(animationFrameId);
+                        pauseBackgroundMusic();
+                        // alert('Game Over!'); // Display a game over message
+                        gameOver();
+                    }
+                }
+
+                // Format the remaining time as MM:SS
+                function formatTime(time) {
+                    const minutes = Math.floor(time / 60);
+                    const seconds = time % 60;
+                    return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                }
+
+                // Start the countdown
+                startCountdown();
+
+
 
 
             }
+
+
+
+
+
+
+
+
+
+
         });
+
 
 
 
