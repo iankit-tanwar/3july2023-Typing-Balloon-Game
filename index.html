@@ -383,9 +383,14 @@
                     if (isPaused) {
                         startPauseButton.textContent = 'Resume';
                         cancelAnimationFrame(animationFrameId);
+                        backgroundMusic.pause();
+                       
+                      
                     } else {
                         startPauseButton.textContent = 'Pause';
                         gameLoop();
+                        backgroundMusic.play();
+                       
                     }
                 }
 
